@@ -1,6 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
+import { auth } from "../../firebase/firebase";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useRouter } from "next/router";
 
 type SignupProps = {};
 
@@ -11,20 +14,46 @@ const Signup: React.FC<SignupProps> = () => {
     setAuthModalState((prev) => ({ ...prev, type: "login" }));
   };
 
+  const [createUserWithEmailAndPassword, user, loading, error] =
+    useCreateUserWithEmailAndPassword(auth);
+
   const [inputs, setInputs] = useState({
     email: "",
     displayName: "",
     password: "",
   });
 
+  const router = useRouter();
+
   const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(inputs);
+
+    if (!inputs.email || !inputs.password || !inputs.displayName) {
+      alert("Please fill in all fields");
+      return;
+    }
+
+    try {
+      const newUser = await createUserWithEmailAndPassword(
+        inputs.email,
+        inputs.password
+      );
+
+      if (!newUser) return;
+
+      router.push("/");
+    } catch (error: any) {
+      alert(error.message);
+    }
   };
+
+  useEffect(() => {
+    if (error) alert(error.message);
+  }, [error]);
 
   return (
     <form onSubmit={handleRegister} className="space-y-6 px-6 py-4">
