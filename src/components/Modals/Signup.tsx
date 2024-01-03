@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
 
@@ -11,8 +11,23 @@ const Signup: React.FC<SignupProps> = () => {
     setAuthModalState((prev) => ({ ...prev, type: "login" }));
   };
 
+  const [inputs, setInputs] = useState({
+    email: "",
+    displayName: "",
+    password: "",
+  });
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleRegister = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    console.log(inputs);
+  };
+
   return (
-    <form className="space-y-6 px-6 py-4">
+    <form onSubmit={handleRegister} className="space-y-6 px-6 py-4">
       <h3 className="text-xl font-medium text-white">Register to LeetClone</h3>
       <div>
         <label
@@ -22,6 +37,7 @@ const Signup: React.FC<SignupProps> = () => {
           Email
         </label>
         <input
+          onChange={handleChangeInput}
           type="email"
           name="email"
           id="email"
@@ -37,6 +53,7 @@ const Signup: React.FC<SignupProps> = () => {
           Display Name
         </label>
         <input
+          onChange={handleChangeInput}
           type="dispalyName"
           name="dispalyName"
           id="dispalyName"
@@ -52,6 +69,7 @@ const Signup: React.FC<SignupProps> = () => {
           Password
         </label>
         <input
+          onChange={handleChangeInput}
           type="password"
           name="password"
           id="password"
