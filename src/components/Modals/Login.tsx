@@ -1,6 +1,7 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { toast } from "react-toastify";
 import { useSetRecoilState } from "recoil";
 import { authModalState } from "../../atoms/authModalAtom";
 import { auth } from "../../firebase/firebase";
@@ -36,7 +37,11 @@ const Login: React.FC<LoginProps> = () => {
     e.preventDefault();
 
     if (!inputs.email || !inputs.password) {
-      alert("Please fill in all fields");
+      toast.error("Please fill all the fields!", {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
       return;
     }
 
@@ -50,12 +55,21 @@ const Login: React.FC<LoginProps> = () => {
 
       router.push("/");
     } catch (error: any) {
-      alert(error.message);
+      toast.error(error.message, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
     }
   };
 
   useEffect(() => {
-    if (error) alert(error.message);
+    if (error)
+      toast.error(error.message, {
+        position: "top-center",
+        autoClose: 3000,
+        theme: "dark",
+      });
   }, [error]);
 
   return (

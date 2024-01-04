@@ -2,6 +2,8 @@ import Head from "next/head";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
 import { RecoilRoot } from "recoil";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -12,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.png" />
       </Head>
+      <ToastContainer />
       <Component {...pageProps} />
     </RecoilRoot>
   );
